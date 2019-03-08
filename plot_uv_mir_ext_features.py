@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.gridspec as gridspec
 
+from astropy.table import Table
+import astropy.units as u
+
 from dust_extinction.averages import GCC09_MWAvg
 from measure_extinction.extdata import ExtData
 
@@ -73,6 +76,12 @@ if __name__ == '__main__':
     ax[0].set_xticks([0.15], minor=True)
 
     # read in and plot the 3.4 um feature
+    a = Table.read('vicyg12_34um.txt', format='ascii.basic')
+    a['freq'].unit = '1/cm'
+    a['flux'].unit = 'erg(cm^2 s Angstrom)'
+    print(a['freq'].to(u.micron, equivalencies=u.spectral()))
+    exit()
+
     ax[1].text(3.4, 0.08, r'3.4 $\mu$m', horizontalalignment='center')
     wave_bands = [3.2, 3.4, 3.6]
     frac_width = 0.02
