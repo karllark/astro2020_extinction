@@ -1,5 +1,7 @@
 import argparse
 
+import numpy as np
+
 import matplotlib.pyplot as plt
 import matplotlib
 import matplotlib.gridspec as gridspec
@@ -28,7 +30,7 @@ if __name__ == '__main__':
 
     matplotlib.rc('font', **font)
 
-    matplotlib.rc('lines', linewidth=1)
+    matplotlib.rc('lines', linewidth=2)
     matplotlib.rc('axes', linewidth=2)
     matplotlib.rc('xtick.major', width=2)
     matplotlib.rc('xtick.minor', width=2)
@@ -76,33 +78,34 @@ if __name__ == '__main__':
     ax[0].set_xticks([0.15], minor=True)
 
     # read in and plot the 3.4 um feature
-    a = Table.read('vicyg12_34um.txt', format='ascii.basic')
-    a['freq'].unit = '1/cm'
-    a['flux'].unit = 'erg(cm^2 s Angstrom)'
-    print(a['freq'].to(u.micron, equivalencies=u.spectral()))
-    exit()
+    a = Table.read('vicyg12_34um_fromplot.txt', format='ascii.basic')
+    a['wave'].unit = '1/cm'
+    freq = a['wave'].quantity
+    waves = freq.to(u.micron, equivalencies=u.spectral())
+    tau = a['tau']/10.2 + 0.075
+    ax[1].plot(waves, tau, 'r-')
 
-    ax[1].text(3.4, 0.08, r'3.4 $\mu$m', horizontalalignment='center')
+    ax[1].text(3.4, 0.097, r'3.4 $\mu$m', horizontalalignment='center')
     wave_bands = [3.2, 3.4, 3.6]
     frac_width = 0.02
     for cwave in wave_bands:
         bx = [cwave-frac_width*cwave, cwave-frac_width*cwave,
               cwave+frac_width*cwave, cwave+frac_width*cwave]
-        by = [-0.05, -0.025, -0.025, -0.05]
+        by = [0.06, 0.066, 0.066, 0.06]
         ax[1].plot(bx, by, 'k-')
-    ax[1].text(3.4, -0.018, 'desired spectral range',
+    ax[1].text(3.4, 0.0685, 'desired spectral range',
                horizontalalignment='center', fontsize=fontsize*0.75)
-    ax[1].errorbar([3.4], [-0.02], xerr=[0.3], fmt='o',
+    ax[1].errorbar([3.4], [0.068], xerr=[0.3], fmt='o',
                    markersize=0.0001, capsize=10,
                    elinewidth=2)
-    ax[1].text(3.4, -0.0375, 'desired imaging bands',
+    ax[1].text(3.4, 0.063, 'desired imaging bands',
                horizontalalignment='center', fontsize=fontsize*0.75,
                bbox=dict(facecolor='white'))
 
     ax[1].set_yscale('linear')
     ax[1].set_xscale('log')
     ax[1].set_xlim(3.0, 3.8)
-    ax[1].set_ylim(-0.05, 0.1)
+    ax[1].set_ylim(0.06, 0.1)
     ax[1].set_xlabel(r'$\lambda$ [$\mu$m]')
     ax[1].get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
     ax[1].get_xaxis().set_minor_formatter(matplotlib.ticker.ScalarFormatter())
@@ -133,7 +136,7 @@ if __name__ == '__main__':
                bbox=dict(facecolor='white'))
 
     ax[2].text(10.0, 0.08, r'10 $\mu$m', horizontalalignment='center')
-    ax[2].text(18.0, 0.045, r'18 $\mu$m', horizontalalignment='center')
+    ax[2].text(20.0, 0.045, r'20 $\mu$m', horizontalalignment='center')
     ax[2].set_yscale('linear')
     ax[2].set_xscale('log')
     ax[2].set_xlim(4.75, 32.0)
