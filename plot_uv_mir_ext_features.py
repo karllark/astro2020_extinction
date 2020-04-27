@@ -82,30 +82,30 @@ if __name__ == '__main__':
     a['wave'].unit = '1/cm'
     freq = a['wave'].quantity
     waves = freq.to(u.micron, equivalencies=u.spectral())
-    tau = a['tau']/10.2 + 0.075
+    tau = a['tau']/(5.*10.2) + 0.075
     ax[1].plot(waves, tau, 'r-')
 
-    ax[1].text(3.4, 0.097, r'3.4 $\mu$m', horizontalalignment='center')
+    ax[1].text(3.4, 0.081, r'3.4 $\mu$m', horizontalalignment='center')
     wave_bands = [3.2, 3.4, 3.6]
     frac_width = 0.02
     for cwave in wave_bands:
         bx = [cwave-frac_width*cwave, cwave-frac_width*cwave,
               cwave+frac_width*cwave, cwave+frac_width*cwave]
-        by = [0.06, 0.066, 0.066, 0.06]
+        by = [0.07, 0.072, 0.072, 0.07]
         ax[1].plot(bx, by, 'k-')
-    ax[1].text(3.4, 0.0685, 'desired spectral range',
+    ax[1].text(3.4, 0.0728, 'desired spectral range',
                horizontalalignment='center', fontsize=fontsize*0.75)
-    ax[1].errorbar([3.4], [0.068], xerr=[0.3], fmt='o',
+    ax[1].errorbar([3.4], [0.0724], xerr=[0.3], fmt='o',
                    markersize=0.0001, capsize=10,
                    elinewidth=2)
-    ax[1].text(3.4, 0.063, 'desired imaging bands',
+    ax[1].text(3.4, 0.071, 'desired imaging bands',
                horizontalalignment='center', fontsize=fontsize*0.75,
                bbox=dict(facecolor='white'))
 
     ax[1].set_yscale('linear')
     ax[1].set_xscale('log')
     ax[1].set_xlim(3.0, 3.8)
-    ax[1].set_ylim(0.06, 0.1)
+    ax[1].set_ylim(0.07, 0.0825)
     ax[1].set_xlabel(r'$\lambda$ [$\mu$m]')
     ax[1].get_xaxis().set_major_formatter(matplotlib.ticker.ScalarFormatter())
     ax[1].get_xaxis().set_minor_formatter(matplotlib.ticker.ScalarFormatter())
@@ -114,8 +114,8 @@ if __name__ == '__main__':
 
     # read in and plot the spitzer average extinction
     spitext = ExtData()
-    spitext.read_ext_data('all_ext_trim_ave.fits')
-    spitext.plot_ext(ax[2], color='r',
+    spitext.read('all_ext_trim_ave.fits')
+    spitext.plot(ax[2], color='r',
                      fontsize=fontsize,
                      legend_key='IRS',
                      legend_label='Average (this work)')
